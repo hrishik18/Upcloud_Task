@@ -8,12 +8,13 @@ const ejsMate = require('ejs-mate');
 const nodemailer = require("nodemailer");
 
 //routes
-const usersRouter = require('./routes/users');
+const usersRouter = require('./routes/apiroute');
 
 
 //model
 const User = require('./Models/User');
 const UserVerification = require('./Models/UserVer');
+const apiUser = require('./Models/apiUser');
 
 //db connection
 const mongoDB = 'mongodb://127.0.0.1/upcloud';
@@ -24,7 +25,7 @@ mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch((err) => console.log(err));
 const db = mongoose.connection;
 
-
+//middleware
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -38,7 +39,7 @@ app.set('view engine', 'ejs');
 // nodemailer stuff
 let transporter = nodemailer.createTransport({
     service: "gmail",
-    auth: {
+    auth: { 
         user: "hrishik.s@somaiya.edu",
         pass: "Mumbai@123",
     }
@@ -79,7 +80,6 @@ app.post('/', (req, res) => {
         <b>expires in 6 hours</b>.</p > <p> Press <a href="${veriUrl}"> here </a> to proceed.</p>`,
         };
 
-
         const newVerification = new UserVerification({
             userId: _id,
             createdAt: Date.now(),
@@ -97,7 +97,6 @@ app.post('/', (req, res) => {
             }).catch((err) => {
                 console.log("After saving error" + err);
             })
-
     }).catch((err) => {
         console.log("After saving error" + err);
     })
@@ -155,6 +154,7 @@ app.get("/user/verify/:userId", (req, res) => {
         })
 })
 
+app.use('/api/upcloud/users', usersRouter)
 const port = 3000;
 app.listen(port, () => {
     console.log(`App listening on port ${port}!`)

@@ -4,7 +4,7 @@
   "description": "email verification,apis",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "devStart": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,8 @@
     "mongoose": "^6.3.6",
     "nodemailer": "^6.7.5",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
   }
 }
