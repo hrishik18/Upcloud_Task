@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
     "username": 1,
     "age": 1,
     "email": 1,
-}).then((data) => {
+  }).then((data) => {
     console.log(data);
     res.status(200).json(data);
   }).catch((err) => {
@@ -16,19 +16,46 @@ router.get('/', (req, res) => {
   })
 
 });
-router.post('/',(req, res) => {
-  const { username, age,email,regisnum,mstatus } = req.body;
+router.post('/', (req, res) => {
+  const { username, age, email, regisnum, mstatus } = req.body;
   const apipost = new apiUser({
     username, age, email, regisnum, mstatus
   });
 
-  apipost.save().then((result)=>{
-      res.status(201).json(result);
+  apipost.save().then((result) => {
+    res.status(201).json(result);
   }).
-  catch((err)=>{
-    res.status(400).json({ message: err.message });
-  })
+    catch((err) => {
+      res.status(400).json({ message: err.message });
+    })
 });
+
+router.patch('/:id', (req, res) => {
+  // const { username, age, email, regisnum, mstatus } = req.body;
+  // const apipost = new apiUser({
+  //   username, age, email, regisnum, mstatus
+  // });
+  apiUser.findByIdAndUpdate(req.params.id, req.body).then(() => {
+    apiUser.save().then((result) => { 
+      res.status(201).json(result);
+    });
+  }).catch((err) => {
+    res.status(400).json({ message: err.message });
+  });
+
+});
+
+
+router.delete('/:id', (req, res) => {
+  const { username, age, email, regisnum, mstatus } = req.body;
+  apiUser.findByIdAndDelete(req.params.id).then(() => {
+    res.status(200).json({ message: "User deleted" });
+  }).catch((err) => {
+    res.status(404).json({ message: err.message });
+  });
+});
+
+
 module.exports = router;
 
 
